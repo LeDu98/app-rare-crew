@@ -72,23 +72,29 @@ export class AppComponent {
       let startTime = new Date(em1.StarTimeUtc);
       let endTime = new Date(em1.EndTimeUtc);
       let hours = Math.abs(((startTime.getHours() * 60 + startTime.getMinutes()) - (endTime.getHours() * 60 + endTime.getMinutes())) / 60);
-      if (em1.EmployeeName == null) {
-        em1.EmployeeName = "Unknown employee";
-      }
-      for (var em2 of this.newListOfEmployees) {
-        a = i;
-        if (em2.EmployeeName === em1.EmployeeName) {
-          em2.TotalTimeInMonth += Math.round(hours);
-          a = i + 1;
-          break;
-        }
+      if ((startTime != null && endTime != null) && ((startTime.getHours() < endTime.getHours()) || (startTime.getHours() == endTime.getHours() && startTime.getMinutes() < endTime.getMinutes()))) {
 
+        if (em1.EmployeeName == null) {
+          em1.EmployeeName = "Unknown employee";
+        }
+        for (var em2 of this.newListOfEmployees) {
+          a = i;
+          if (em2.EmployeeName === em1.EmployeeName) {
+            em2.TotalTimeInMonth += Math.round(hours);
+            a = i + 1;
+            break;
+          }
+
+        }
+        if (i == a) {
+          var em = new NewEmployee(i, em1.EmployeeName, Math.round(hours));
+          this.newListOfEmployees.push(em);
+          i++;
+        }
       }
-      if (i == a) {
-        var em = new NewEmployee(i, em1.EmployeeName, Math.round(hours));
-        this.newListOfEmployees.push(em);
-        i++;
-      }
+
+
+
     }
     this.newListOfEmployees.sort((a, b) => (a.TotalTimeInMonth > b.TotalTimeInMonth) ? -1 : 1);
     console.log(this.employees);
